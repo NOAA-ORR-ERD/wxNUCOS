@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<link rel="NUCON icon" href="favicon.ico">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta http-equiv="content-style-type" content="text/css">
+		
+		<link rel="stylesheet" type="text/css" href="main.css">
+		
+		<title>NUCOS Help</title>
+	</head>
+
+		<body>
+		<img src="Images/NUCOS_64.png" alt="NUCOS logo." height="64" width="64" align="right">
+		<h1>NUCOS Help</h1>
+		The NOAA Unit Converter for Oil Spills (NUCOS) was created by NOAA's Office of Response and Restoration (OR&amp;R) as a simple desktop tool for converting many different units. It was designed primarily for use in oil and chemical spill response, so it includes units likely to be encountered by spill responders.<p><a href="#GeneralUse">General Use</a></p>
+			<ul>
+				<li><a href="#SignificantFigures">Significant Figures</a>
+			</ul>
+			<p><a href="#SpecialCases">Special Cases</a></p>
+			<ul>
+				<li><a href="#OilConcentration">Oil Concentration</a>
+				<li><a href="#KinematicViscosity">Kinematic Viscosity</a>
+				<li><a href="#LatitudeLongitude">Latitude/Longitude</a>
+				<li><a href="#OilQuantity">Oil Quantity</a>
+			</ul>
+			
+			<p><a href="#MoreInformation">More Information</a></p>
+			
+			<h2><a name="GeneralUse"></a>General Use <font size="-1">&#x2022; <a href="#top">top</a></font></h2>
+			<p>NUCOS provides a set of units for each physical quantity. Most of these follow a similar interface:</p>
+			<ul>
+				<li>Choose units from the dropdown menus for the input and output values.
+				<li>Enter the quantity to be converted in the Input box.
+				<li>The related output quantity will display in the Output box.
+			</ul>
+			<p>If you enter anything invalid (such as letters, rather than a number) in the Input box, the Output display will be blank.</p>
+			<h3><a name="SignificantFigures"></a>Significant Figures <font size="-1">&#x2022; <a href="#top">top</a></font></h3>
+			<p>By default, the output will display 3 significant figures. If you want more, enter more digits in the Input box. For instance:</p>
+			<p><img src="Images/Sig_Figures_1a.png" alt="Conversion of 1 mile to 0.869 nautical miles." height="135" width="263" border="0"> <img src="Images/Sig_Figures_1b.png" alt="Conversion of 1.00000 mile to 0.868976 nautical miles." height="135" width="263" border="0"> <img src="Images/Sig_Figures_1c.png" alt="Conversion of 1.000000000 mile to 0.86897624 nautical miles." height="135" width="263" border="0"></p>
+			<p><br>
+				Note that the maximum significant figures for output is 7 because the input conversion factors only have 7 significant figures.</p>
+			<h2><a name="SpecialCases"></a>Special Cases <font size="-1">&#x2022; <a href="#top">top</a></font></h2>
+			<p>A number of special cases exist for units that are not a multiplicative factor with simple input-output. These special cases include the units for (1) Oil Concentration, (2) Kinematic Viscosity, (3) Latitude/Longitude, and (4) Oil Quantity.</p>
+			<h3><a name="OilConcentration"></a>1. Oil Concentration <font size="-1">&#x2022; <a href="#top">top</a></font></h3>
+			<p>Oil concentration is usually expressed as volume divided by area, such as &quot;barrels per acre.&quot; Technically, this is a length unit (length cubed divided by length squared). However, the unit has a different meaning in the field so in NUCOS, it was separated from the other length units to avoid confusion.</p>
+			<p>Oil conversion units are used like the rest of the &quot;standard&quot; units in NUCOS.</p>
+			<h3><a name="KinematicViscosity"></a>2. Kinematic Viscosity <font size="-1">&#x2022; <a href="#top">top</a></font></h3>
+			<p>Kinematic Viscosity is a tricky unit. Many of the units used are not directly physical units, but rather the results of standard testing methods (Saybolt Universal Seconds (SUS) or Saybolt Furol Seconds (SFS)). Because these units depend on temperature and the properties of the oil at hand, accurate conversion is difficult. For a full method, see:</p>
+			<p>Document ASTM D 2161: <a href="http://engineers.ihs.com/document/abstract/JPIVHBAAAAAAAAAA">Standard Practice for Conversion of Kinematic Viscosity to Saybolt Universal Viscosity or to Saybolt Furol Viscosity</a>.</p>
+			<p>In NUCOS, simple approximations are made that should give answers accurate enough for most response work, at least for values above 100 centistoke (cSt).</p>
+			<h3><a name="LatitudeLongitude"></a>3. Latitude/Longitude <font size="-1">&#x2022; <a href="#top">top</a></font></h3>
+			<p>The Latitude/Longitude (Lat-Long) window converts the different formats for expressing latitude and longitude degrees:</p>
+			<ul>
+				<li>Decimal Degrees
+				<li>Degrees, Decimal Minutes
+				<li>Degrees, Minutes, Seconds
+			</ul>
+			<h4>Lat-Long Input</h4>
+			<p>On the Latitude/Longitude window, there are three Input boxes: Degrees, Minutes, and Seconds. In these boxes, enter the values to be converted. The Output box will show the converted values.</p>
+			<p>Note that you can enter a decimal value in either the Degrees or Minutes box:</p>
+			<p><img src="Images/Lat_Long_1a.png" alt="Conversion of a lat-long expressed in degrees, minutes, seconds to other formats." height="160" width="381" border="0"><br>
+				<br>
+				<img src="Images/Lat_Long_1b.png" alt="Conversion of a lat-long expressed in decimal degrees to other formats." height="160" width="380" border="0"><br>
+				<br>
+				<img src="Images/Lat_Long_1c.png" alt="Conversion of a lat-long expressed in decimal degrees and decimal minutes to other formats." height="160" width="380" border="0"></p>
+		<p><br>
+			NUCOS prevents you from accidentally entering decimal degrees plus minutes or seconds. Similarly, it prevents you from entering decimal minutes plus seconds. If you try to do this, the NUCOS output will be empty.
+		<h4>Lat-Long Output</h4>
+		<p>On the Latitude/Longitude window there are three Output boxes, which display values all at once:</p>
+		<ol>
+				<li>Decimal Degrees
+				<li>Deg - Min (Degrees, Decimal Minutes)
+				<li>Deg - Min - Sec (Degrees, Minutes, Seconds)
+			</ol>
+			<p>Although you can't enter values in these boxes, you can copy and paste values from them. The output uses Unicode for the degree symbol, so the symbol should copy and paste well into most current applications, including Firefox, Thunderbird, Internet Explorer, and Microsoft Word.</p>
+			<h3><a name="OilQuantity"></a>4. Oil Quantity <font size="-1">&#x2022; <a href="#top">top</a></font></h3>
+			<p>The Oil Quantity window provides conversions between different ways of expressing amounts of oil. Some standard methods use volume (barrels or bbls), while some use mass (tonnes). To convert between these methods, the density of the oil must be known.</p>
+			<h4>Oil Type and Density</h4>
+			<p>NUCOS provides a list of &quot;standard&quot; oils with approximate associated values for API gravity (density). If you know the density of the oil to be used in your conversion, you can enter it using any of the density units provided in the Oil Density unit menu. When you enter an oil density value, the oil type will change to &quot;unknown.&quot;</p>
+			<h4>Mass to Volume Conversion</h4>
+			<p>Once a density is entered or provided by NUCOS, you can calculate either mass from volume, or volume from mass. You can enter a value in either Input box, and the other will be calculated. If you later change the density, NUCOS will remember the box you last altered, and will re-calculate the other values. The values shown should always be in sync; the triple of mass, density, and volume should be consistent. If you want one of them different, you can change it and the others will be re-calculated.</p>
+			<h4><em>Example:</em></h4>
+			<p>In the Oil Quantity window...</p>
+			<ol>
+				<li>Select &quot;Lube Oil&quot; from the Oil Type menu. <br>
+				<br>
+				<span class="comment">The Oil Density box will pre-fill with 25.70 API degrees. </span>
+			</ol>
+			<ol start="2">
+				<li>Select &quot;metric ton (tonne)&quot; from the Mass units menu.<br>
+					<br>
+				<li>Select &quot;barrel (petroleum)&quot; from the Volume units menu.<br>
+					<br>
+				<li>Enter 10 in the Mass quantity box.<br>
+					<br>
+					<span class="comment">Volume will display 69.9 barrel (petroleum). </span>
+			</ol>
+			<ol start="5">
+				<li>Next, enter 50 in the Volume box.<br>
+					<br>
+					<span class="comment">Mass will display 7.15 metric ton. Because you entered a volume, NUCOS computed a mass.</span>
+			</ol>
+			<ol start="6">
+				<li>Finally, change the Oil Type to &quot;IFO 300.&quot;<br>
+					<br>
+					<span class="comment">Mass changes to 7.84 metric ton, while Volume remains at 50 barrel.</span><br>
+					<span class="comment">Because you last entered a Volume, NUCOS knew to calculate the Mass. </span>
+			</ol>
+			
+			<h2><a name="MoreInformation"></a>More Information <font size="-1">&#x2022; <a href="#top">top</a></font></h2>
+			<p>You can learn more about NUCOS from the OR&amp;R Web site:</p>
+		<ul>
+			<li><a href="http://response.restoration.noaa.gov/nucos">NUCOS: Unit Converter for Spill Responders</a>
+		</ul>
+		<p>Questions or comments? Contact the NUCOS Specialist:</p>
+		<ul>
+			<li><a href="mailto:orr.nucos@noaa.gov">NUCOS Specialist</a>
+		</ul>
+	</body>
+
+</html>

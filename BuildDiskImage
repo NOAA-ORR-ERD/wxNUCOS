@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# script to build an OS_X disk image from the Converter app
+
+/usr/bin/hdiutil create -srcfolder dist -volname "NUCOS 1.4 Disk Image" -ov "Installers/NUCOS1.4"
+
