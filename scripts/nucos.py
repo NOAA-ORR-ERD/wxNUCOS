@@ -1,3 +1,5 @@
+#!/usr/bin/env pythonw
+
 import wxnucos.gui
 
 

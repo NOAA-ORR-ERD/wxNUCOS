@@ -335,8 +335,9 @@ class ConverterFrame(wx.Frame):
 
         self.SetMenuBar(MenuBar)
 
-        wx.EVT_MENU(self, wx.ID_EXIT, self.OnQuit)  # this will auto-bind to app menu on Mac
-        wx.EVT_MENU(self, wx.ID_ABOUT, self.OnAbout)
+        # Is there a better way to do this ??
+        wx.EVT_MENU.Bind(self, self.GetId(), wx.ID_EXIT, self.OnQuit)
+        wx.EVT_MENU.Bind(self, self.GetId(), wx.ID_ABOUT, self.OnAbout)
 
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
