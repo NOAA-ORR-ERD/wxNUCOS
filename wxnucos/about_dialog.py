@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pythonw
 
 """
 Simple about Dialog class -- I like it better than the one that wxPython comes with
@@ -42,6 +42,7 @@ class AboutDialog(wx.Dialog):
 
         # Build the header
         Header = wx.BoxSizer(wx.HORIZONTAL)
+        Header.Add((64, 1), 1)
         if self.icon1:
             Header.Add(wx.StaticBitmap(self, bitmap=self.icon1), 0)
         else:
@@ -63,6 +64,7 @@ class AboutDialog(wx.Dialog):
             Header.Add(wx.StaticBitmap(self, bitmap=self.icon2), 0)
         else:
             Header.Add((64, 64))
+        Header.Add((64, 1), 1)
         width = Header.MinSize[0]
 
         # Now the rest;
