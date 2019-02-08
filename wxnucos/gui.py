@@ -4,7 +4,7 @@ import sys
 
 import os
 import webbrowser
-
+from pathlib import Path
 import wx
 
 import unit_conversion as UC
@@ -331,13 +331,14 @@ class ConverterFrame(wx.Frame):
                                 "Bring up NUCOS help in your browser")
         MenuBar.Append(help_menu, "&Help")
 
-        self.Bind(wx.EVT_MENU, self.OnHelp, item)
+#        self.Bind(wx.EVT_MENU, self.OnHelp, item)
 
         self.SetMenuBar(MenuBar)
 
         # Is there a better way to do this ??
         wx.EVT_MENU.Bind(self, self.GetId(), wx.ID_EXIT, self.OnQuit)
         wx.EVT_MENU.Bind(self, self.GetId(), wx.ID_ABOUT, self.OnAbout)
+        wx.EVT_MENU.Bind(self, self.GetId(), wx.ID_HELP, self.OnHelp)
 
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
@@ -357,14 +358,17 @@ class ConverterFrame(wx.Frame):
         wx.CallLater(3000, lambda d: d.Close(), d)
 
         # open the help html in the system browser
-        if sys.platform == 'darwin':
-            url = "file://" + os.path.join(os.getcwd(), "Help/help.html")
-        else:  # for windows
-            exe_path = os.path.split(os.path.abspath(sys.argv[0]))[0]
-            # print "exe path is:", exe_path
-            url = "file://" + os.path.join(exe_path, "Help/help.html")
+        ## old code for frozen app -- still needed??
+        # if sys.platform == 'darwin':
+        #     print(os.getcwd())
+        #     url = "file://" + os.path.join(os.getcwd(), "Help/help.html")
+        # else:  # for windows
+        #     exe_path = os.path.split(os.path.abspath(sys.argv[0]))[0]
+        #     # print "exe path is:", exe_path
+        #     url = "file://" + os.path.join(exe_path, "Help/help.html")
+        help_file = Path(__file__).parent / "help" / "Help.html"
 
-        webbrowser.open_new(url)
+        webbrowser.open_new("file://" + str(help_file))
 
     def OnQuit(self, event):
         self.Close(True)
