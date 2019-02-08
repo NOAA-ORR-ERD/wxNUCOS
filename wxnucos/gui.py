@@ -358,7 +358,7 @@ class ConverterFrame(wx.Frame):
         wx.CallLater(3000, lambda d: d.Close(), d)
 
         # open the help html in the system browser
-        ## old code for frozen app -- still needed??
+        # # old code for frozen app -- still needed??
         # if sys.platform == 'darwin':
         #     print(os.getcwd())
         #     url = "file://" + os.path.join(os.getcwd(), "Help/help.html")
