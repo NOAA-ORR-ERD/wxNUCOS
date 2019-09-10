@@ -254,13 +254,12 @@ class MainPanel(wx.Panel):
         size = Panel.GetBestSize()
         BiggestSize = (max(size[0], BiggestSize[0]), max(size[1], BiggestSize[1]))
         # create Button
-        ID = wx.NewId()
         button = wx.Button(self, wx.ID_ANY, "Lat-Long")
         ButtonSizer.Add(button,
                         0,
                         wx.EXPAND | wx.ALL,
                         3)
-        self.Panels[ID] = Panel
+        self.Panels[button.Id] = Panel
 
         # set up the button event:
         button.Bind(wx.EVT_BUTTON, self.OnButtonPress)
@@ -278,7 +277,7 @@ class MainPanel(wx.Panel):
                         0,
                         wx.EXPAND | wx.ALL,
                         3)
-        self.Panels[ID] = Panel
+        self.Panels[button.Id] = Panel
         # set up the button event:
         button.Bind(wx.EVT_BUTTON, self.OnButtonPress)
 
