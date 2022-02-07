@@ -2,12 +2,11 @@
 
 import sys
 
-import os
 import webbrowser
 from pathlib import Path
 import wx
 
-import unit_conversion as UC
+import nucos
 
 # the GUI imports
 from . import __version__
@@ -17,29 +16,53 @@ from .about_dialog import AboutDialog
 from .bringing_up_help_dialog import BringingUpHelpDialog
 from .utilities import SignificantFigures
 
+# this updated as of nucos version 3.0.0
+UNIT_TYPES_TO_IGNORE = {
+ 'Delta Temperature',
+# 'Concentration',
+ 'Angular Measure',
+ 'Angular Velocity'}
+
+UNIT_TYPES = sorted(ut for ut in nucos.GetUnitTypes()
+                    if ut not in UNIT_TYPES_TO_IGNORE)
+
 
 class ConverterPanel(wx.Panel):
+
     def __init__(self, parent, id, UnitType):
 
-        wx.Panel.__init__(self, parent, id, wx.DefaultPosition, style=wx.SUNKEN_BORDER)
+        wx.Panel.__init__(self,
+                          parent,
+                          id,
+                          wx.DefaultPosition,
+                          style=wx.SUNKEN_BORDER)
 
         self.UnitType = UnitType
-        Units = UC.GetUnitNames(UnitType)
+        Units = nucos.GetUnitNames(UnitType)
         Units.sort(key=str.lower)
 
-        self.FromUnits = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, Units)
+        self.FromUnits = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition,
+                                   wx.DefaultSize, Units)
         self.FromUnits.SetSelection(0)
 
-        self.ToUnits = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, Units)
+        self.ToUnits = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition,
+                                 wx.DefaultSize, Units)
         self.ToUnits.SetSelection(0)
 
-        self.InputBox = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, (100, -1))
-        self.OutBox = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, (100, -1), style = wx.TE_READONLY)
+        self.InputBox = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition,
+                                    (100, -1))
+        self.OutBox = wx.TextCtrl(self,
+                                  wx.ID_ANY,
+                                  "",
+                                  wx.DefaultPosition, (100, -1),
+                                  style=wx.TE_READONLY)
 
         Grid = wx.FlexGridSizer(6, 2, 5, 20)
 
-        Grid.Add(wx.StaticText(self, -1, "Convert From:", wx.DefaultPosition, wx.DefaultSize),0,wx.ALIGN_LEFT)
-        Grid.Add((20, 1), 1) # adding a spacer
+        Grid.Add(
+            wx.StaticText(self, -1, "Convert From:", wx.DefaultPosition,
+                          wx.DefaultSize), 0, wx.ALIGN_LEFT)
+        Grid.Add((20, 1), 1)  # adding a spacer
 
         Grid.Add(self.InputBox, 0, wx.ALIGN_LEFT)
         Grid.Add(self.FromUnits, 0, wx.ALIGN_RIGHT)
@@ -47,7 +70,9 @@ class ConverterPanel(wx.Panel):
         Grid.Add((20, 20), 1)  # adding a spacer
         Grid.Add((20, 20), 1)  # adding a spacer
 
-        Grid.Add(wx.StaticText(self, -1, "Convert To:", wx.DefaultPosition, wx.DefaultSize),0,wx.ALIGN_LEFT)
+        Grid.Add(
+            wx.StaticText(self, -1, "Convert To:", wx.DefaultPosition,
+                          wx.DefaultSize), 0, wx.ALIGN_LEFT)
         Grid.Add((20, 1), 1)  # adding a spacer
 
         Grid.Add(self.OutBox, 0, wx.ALIGN_LEFT)
@@ -56,20 +81,21 @@ class ConverterPanel(wx.Panel):
         Grid.Layout()
         OuterBox = wx.BoxSizer(wx.VERTICAL)
         OuterBox.Add((20, 20), 0)
-        Label = wx.StaticText(self, -1, UnitType, wx.DefaultPosition, wx.DefaultSize)
+        Label = wx.StaticText(self, -1, UnitType, wx.DefaultPosition,
+                              wx.DefaultSize)
         of = Label.GetFont()
-        Font = wx.Font(int(of.GetPointSize() * 2), of.GetFamily(), wx.NORMAL, wx.NORMAL)
+        Font = wx.Font(int(of.GetPointSize() * 2), of.GetFamily(), wx.NORMAL,
+                       wx.NORMAL)
         Label.SetFont(Font)
 
         IconBox = wx.BoxSizer(wx.HORIZONTAL)
-        IconBox.Add(wx.StaticBitmap(self,bitmap=icons.NUCOS64.GetBitmap()),
-                                    0,
-                                    wx.ALIGN_LEFT | wx.LEFT,
-                                    30)
+        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NUCOS64.GetBitmap()), 0,
+                    wx.ALIGN_LEFT | wx.LEFT, 30)
         IconBox.Add((1, 1), 1, wx.EXPAND)
         IconBox.Add(Label, 0, wx.ALIGN_CENTER)
         IconBox.Add((1, 1), 1, wx.EXPAND)
-        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NOAA64.GetBitmap()), 0, wx.ALIGN_RIGHT | wx.RIGHT, 30)
+        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NOAA64.GetBitmap()), 0,
+                    wx.RIGHT, 30)
 
         OuterBox.Add(IconBox, 0, wx.EXPAND)
         OuterBox.Add(Grid, 0, wx.ALIGN_CENTER | wx.ALL, 30)
@@ -83,7 +109,7 @@ class ConverterPanel(wx.Panel):
         self.FromUnits.Bind(wx.EVT_CHOICE, self.Recalculate)
         self.ToUnits.Bind(wx.EVT_CHOICE, self.Recalculate)
 
-    def Recalculate(self,event):
+    def Recalculate(self, event):
         try:
             from_string = self.InputBox.GetValue()
             from_val = float(from_string)
@@ -91,47 +117,59 @@ class ConverterPanel(wx.Panel):
             from_unit = self.FromUnits.GetStringSelection()
             to_unit = self.ToUnits.GetStringSelection()
 
-            to_val = UC.Convert(self.UnitType, from_unit, to_unit, from_val)
+            to_val = nucos.convert(self.UnitType, from_unit, to_unit, from_val)
 
-            format_string = "%%.%ig"%SignificantFigures(from_string)
-            self.OutBox.SetValue(format_string%(to_val,))
+            format_string = "%%.%ig" % SignificantFigures(from_string)
+            self.OutBox.SetValue(format_string % (to_val, ))
         except ValueError:
             self.OutBox.SetValue("")
 
+
 class LatLongPanel(wx.Panel):
+
     def __init__(self, *args, **kwargs):
 
         kwargs['style'] = wx.SUNKEN_BORDER
 
         wx.Panel.__init__(self, *args, **kwargs)
 
-
-        self.TopPanel = wx.Panel(self, style = wx.TAB_TRAVERSAL | wx.NO_BORDER)
+        self.TopPanel = wx.Panel(self, style=wx.TAB_TRAVERSAL | wx.NO_BORDER)
 
         self.DegreesBox = wx.TextCtrl(self.TopPanel, size=(80, -1))
         self.MinutesBox = wx.TextCtrl(self.TopPanel, size=(80, -1))
         self.SecondsBox = wx.TextCtrl(self.TopPanel, size=(80, -1))
 
-        self.DecimalDegreesBox = wx.TextCtrl(self, size=(100, -1), style=wx.TE_READONLY)
-        self.DegreesMinBox = wx.TextCtrl(self, size=(100, -1), style=wx.TE_READONLY)
-        self.DegMinSecBox = wx.TextCtrl(self, size=(100, -1), style=wx.TE_READONLY)
+        self.DecimalDegreesBox = wx.TextCtrl(self,
+                                             size=(100, -1),
+                                             style=wx.TE_READONLY)
+        self.DegreesMinBox = wx.TextCtrl(self,
+                                         size=(100, -1),
+                                         style=wx.TE_READONLY)
+        self.DegMinSecBox = wx.TextCtrl(self,
+                                        size=(100, -1),
+                                        style=wx.TE_READONLY)
 
         DMSSizer = wx.GridSizer(2, 4, 1, 5)
-        DMSSizer.Add((1, 1),)
+        DMSSizer.Add((1, 1), )
         DMSSizer.Add(wx.StaticText(self.TopPanel, label="Degrees:"))
         DMSSizer.Add(wx.StaticText(self.TopPanel, label="Minutes:"))
         DMSSizer.Add(wx.StaticText(self.TopPanel, label="Seconds:"))
 
-
         Label = wx.StaticText(self.TopPanel, label="Input:")
         of = Label.GetFont()
-        Font = wx.Font(int(of.GetPointSize() * 1.2), of.GetFamily(), style=wx.NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        Font = wx.Font(int(of.GetPointSize() * 1.2),
+                       of.GetFamily(),
+                       style=wx.NORMAL,
+                       weight=wx.FONTWEIGHT_BOLD)
         Label.SetFont(Font)
 
         DMSSizer.Add(Label, 0, wx.RIGHT)
         DMSSizer.Add(self.DegreesBox, 0, wx.RIGHT, 5)
         DMSSizer.Add(self.MinutesBox, 0, wx.RIGHT, 5)
-        DMSSizer.Add(self.SecondsBox, 0, )
+        DMSSizer.Add(
+            self.SecondsBox,
+            0,
+        )
 
         self.TopPanel.SetSizerAndFit(DMSSizer)
 
@@ -140,18 +178,21 @@ class LatLongPanel(wx.Panel):
 
         Label = wx.StaticText(self, label="Output:")
         of = Label.GetFont()
-        Font = wx.Font(int(of.GetPointSize() * 1.2), of.GetFamily(), style=wx.NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        Font = wx.Font(int(of.GetPointSize() * 1.2),
+                       of.GetFamily(),
+                       style=wx.NORMAL,
+                       weight=wx.FONTWEIGHT_BOLD)
         Label.SetFont(Font)
 
         OutputSizer.Add(Label, 0, wx.RIGHT, 20)
         OutputSizer.Add(wx.StaticText(self, label="Decimal Degrees:"))
         OutputSizer.Add(self.DecimalDegreesBox, 1, wx.EXPAND)
 
-        OutputSizer.Add((1,1))
+        OutputSizer.Add((1, 1))
         OutputSizer.Add(wx.StaticText(self, label="Deg - Min:"))
         OutputSizer.Add(self.DegreesMinBox, 1, wx.EXPAND)
 
-        OutputSizer.Add((1,1))
+        OutputSizer.Add((1, 1))
         OutputSizer.Add(wx.StaticText(self, label="Deg - Min - Sec:"))
         OutputSizer.Add(self.DegMinSecBox, 1, wx.EXPAND)
 
@@ -160,15 +201,18 @@ class LatLongPanel(wx.Panel):
         VertBox.Add((20, 20), 0)
         Label = wx.StaticText(self, label="Latitude/Longitude")
         of = Label.GetFont()
-        Font = wx.Font(int(of.GetPointSize() * 2), of.GetFamily(), wx.NORMAL, wx.NORMAL)
+        Font = wx.Font(int(of.GetPointSize() * 2), of.GetFamily(), wx.NORMAL,
+                       wx.NORMAL)
         Label.SetFont(Font)
 
         IconBox = wx.BoxSizer(wx.HORIZONTAL)
-        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NUCOS64.GetBitmap()), 0, wx.ALIGN_LEFT | wx.RIGHT,20)
-        IconBox.Add((1,1), 1, wx.EXPAND)
+        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NUCOS64.GetBitmap()), 0,
+                    wx.ALIGN_LEFT | wx.RIGHT, 20)
+        IconBox.Add((1, 1), 1, wx.EXPAND)
         IconBox.Add(Label, 0, wx.ALIGN_CENTER)
-        IconBox.Add((1,1), 1, wx.EXPAND)
-        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NOAA64.GetBitmap()), 0, wx.ALIGN_RIGHT | wx.LEFT,20)
+        IconBox.Add((1, 1), 1, wx.EXPAND)
+        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NOAA64.GetBitmap()), 0,
+                    wx.LEFT, 20)
 
         VertBox.Add((20, 20), 1)
         VertBox.Add(IconBox, 0, wx.EXPAND)
@@ -176,12 +220,10 @@ class LatLongPanel(wx.Panel):
         VertBox.Add(OutputSizer, 0, wx.ALL | wx.EXPAND, 10)
         VertBox.Add((20, 20), 1)
 
-
-
         OuterBox = wx.BoxSizer(wx.HORIZONTAL)
-        OuterBox.Add((1,1), 1)
+        OuterBox.Add((1, 1), 1)
         OuterBox.Add(VertBox, 0)
-        OuterBox.Add((1,1), 1)
+        OuterBox.Add((1, 1), 1)
 
         self.DegreesBox.Bind(wx.EVT_TEXT, self.Recalculate)
         self.MinutesBox.Bind(wx.EVT_TEXT, self.Recalculate)
@@ -190,7 +232,7 @@ class LatLongPanel(wx.Panel):
         self.SetSizerAndFit(OuterBox)
         #self.SetSizerAndFit(VertBox)
 
-    LLC = UC.LatLongConverter
+    LLC = nucos.LatLongConverter
 
     def OnDDFocus(self, event=None):
         if sys.platform == "linux2":
@@ -198,10 +240,10 @@ class LatLongPanel(wx.Panel):
             self.DegreesBox.SetFocus()
         pass
 
-    def Recalculate(self,event):
+    def Recalculate(self, event):
         try:
             values = []
-            for box in (self.DegreesBox, self.MinutesBox, self.SecondsBox ):
+            for box in (self.DegreesBox, self.MinutesBox, self.SecondsBox):
                 t = box.GetValue()
                 if t.strip() == "":
                     values.append(0.0)
@@ -210,7 +252,8 @@ class LatLongPanel(wx.Panel):
 
             DecDeg = self.LLC.ToDecDeg(*values)
 
-            self.DecimalDegreesBox.SetValue(self.LLC.ToDecDeg(DecDeg, ustring=True))
+            self.DecimalDegreesBox.SetValue(
+                self.LLC.ToDecDeg(DecDeg, ustring=True))
             self.DegreesMinBox.SetValue(self.LLC.ToDegMin(DecDeg, True))
             self.DegMinSecBox.SetValue(self.LLC.ToDegMinSec(DecDeg, True))
 
@@ -221,29 +264,31 @@ class LatLongPanel(wx.Panel):
 
 
 class MainPanel(wx.Panel):
+
     def __init__(self, *args, **kwargs):
         wx.Panel.__init__(self, *args, **kwargs)
 
         MainSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.MainSizer = MainSizer
 
-        ButtonSizer = wx.BoxSizer(wx.VERTICAL)
+        num_buttons = len(UNIT_TYPES) + 2  # for the latlon and oil quantity
+        rows = int(num_buttons / 2 + 0.9)
+
+        ButtonSizer = wx.GridSizer(rows=rows, cols=2, vgap=4, hgap=4)
+        # ButtonSizer = wx.BoxSizer(wx.VERTICAL)
 
         self.Panels = {}
-        BiggestSize = (0,0)
-        for UnitType in UC.GetUnitTypes():
-            # create Panel
+        BiggestSize = (0, 0)
+        for UnitType in UNIT_TYPES:
             Panel = ConverterPanel(self, -1, UnitType)
             Panel.Show(False)
             size = Panel.GetBestSize()
-            BiggestSize = ( max(size[0], BiggestSize[0]), max(size[1], BiggestSize[1]))
+            BiggestSize = (max(size[0],
+                               BiggestSize[0]), max(size[1], BiggestSize[1]))
 
             # create Button
             button = wx.Button(self, wx.ID_ANY, UnitType)
-            ButtonSizer.Add(button,
-                            0,
-                            wx.EXPAND | wx.ALL,
-                            3)
+            ButtonSizer.Add(button, 0, wx.EXPAND | wx.ALL, 3)
             self.Panels[button.Id] = Panel
 
             # set up the events:
@@ -252,13 +297,11 @@ class MainPanel(wx.Panel):
         Panel = LatLongPanel(self)
         Panel.Show(False)
         size = Panel.GetBestSize()
-        BiggestSize = (max(size[0], BiggestSize[0]), max(size[1], BiggestSize[1]))
+        BiggestSize = (max(size[0],
+                           BiggestSize[0]), max(size[1], BiggestSize[1]))
         # create Button
         button = wx.Button(self, wx.ID_ANY, "Lat-Long")
-        ButtonSizer.Add(button,
-                        0,
-                        wx.EXPAND | wx.ALL,
-                        3)
+        ButtonSizer.Add(button, 0, wx.EXPAND | wx.ALL, 3)
         self.Panels[button.Id] = Panel
 
         # set up the button event:
@@ -268,15 +311,13 @@ class MainPanel(wx.Panel):
         Panel = oil_quantity.OilQuantityPanel(self)
         Panel.Show(False)
         size = Panel.GetBestSize()
-        BiggestSize = (max(size[0], BiggestSize[0]), max(size[1], BiggestSize[1]))
+        BiggestSize = (max(size[0],
+                           BiggestSize[0]), max(size[1], BiggestSize[1]))
 
         # create Button
         # ID = wx.NewId()
         button = wx.Button(self, wx.ID_ANY, "Oil Quantity")
-        ButtonSizer.Add(button,
-                        0,
-                        wx.EXPAND | wx.ALL,
-                        3)
+        ButtonSizer.Add(button, 0, wx.EXPAND | wx.ALL, 3)
         self.Panels[button.Id] = Panel
         # set up the button event:
         button.Bind(wx.EVT_BUTTON, self.OnButtonPress)
@@ -308,6 +349,7 @@ class MainPanel(wx.Panel):
 
 
 class ConverterFrame(wx.Frame):
+
     def __init__(self, parent, id, title, position, size):
         wx.Frame.__init__(self, parent, id, title, position, size)
 
@@ -330,7 +372,7 @@ class ConverterFrame(wx.Frame):
                                 "Bring up NUCOS help in your browser")
         MenuBar.Append(help_menu, "&Help")
 
-#        self.Bind(wx.EVT_MENU, self.OnHelp, item)
+        #        self.Bind(wx.EVT_MENU, self.OnHelp, item)
 
         self.SetMenuBar(MenuBar)
 
@@ -377,19 +419,22 @@ class ConverterFrame(wx.Frame):
 
     def OnAbout(self, event):
         if self.AboutDialog is None:
-            self.AboutDialog = AboutDialog(self,
-                                           icon1=icons.NUCOS64.GetBitmap(),
-                                           icon2=icons.NOAA64.GetBitmap(),
-                                           short_name='NUCOS',
-                                           long_name='NOAA Unit Converter for Oil Spills',
-                                           version=__version__,
-                                           description=description,
-                                           urls=["http://response.restoration.noaa.gov/NUCOS",
-                                                 "mailto://orr.nucos@noaa.gov"],
-                                           licence=("NUCOS was developed by an agency of the "
-                                                    "US government and is in the public "
-                                                    "domain"),
-                                           developers=["Christopher Barker, PhD"])
+            self.AboutDialog = AboutDialog(
+                self,
+                icon1=icons.NUCOS64.GetBitmap(),
+                icon2=icons.NOAA64.GetBitmap(),
+                short_name='NUCOS',
+                long_name='NOAA Unit Converter for Oil Spills',
+                version=__version__,
+                description=description,
+                urls=[
+                    "http://response.restoration.noaa.gov/NUCOS",
+                    "mailto://orr.nucos@noaa.gov"
+                ],
+                licence=("NUCOS was developed by an agency of the "
+                         "US government and is in the public "
+                         "domain"),
+                developers=["Christopher Barker, PhD"])
 
         self.AboutDialog.ShowModal()
 
@@ -405,6 +450,7 @@ Emergency Response Division
 
 
 class App(wx.App):
+
     def __init__(self, *args, **kwargs):
         wx.App.__init__(self, *args, **kwargs)
 
@@ -413,10 +459,7 @@ class App(wx.App):
         self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
 
     def OnInit(self):
-        frame = ConverterFrame(None,
-                               wx.ID_ANY,
-                               "NUCOS",
-                               wx.DefaultPosition,
+        frame = ConverterFrame(None, wx.ID_ANY, "NUCOS", wx.DefaultPosition,
                                wx.DefaultSize)
         self.SetTopWindow(frame)
         frame.Show(True)
@@ -437,25 +480,6 @@ class App(wx.App):
 
 def main():
     app = App(False)
-#    import wx.lib.inspection
-#    wx.lib.inspection.InspectionTool().Show()
+    #    import wx.lib.inspection
+    #    wx.lib.inspection.InspectionTool().Show()
     app.MainLoop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """
 Oil Quantity converter for Unitconverter
 
@@ -12,24 +11,27 @@ from . import icons
 from .utilities import NoCaseCompare, SignificantFigures
 
 # standard Oil types and their APIs
-OilTypes = {u"Crude - Light" : 36.0, # from "Conversion Factors Used in Oil Industry"
-            u"Crude - Medium": 26.7, # from "Conversion Factors Used in Oil Industry"
-            u"Crude - Heavy" : 17.0, # from "Conversion Factors Used in Oil Industry"
-            u"Gasoline"    : 57.0, # from "Conversion Factors Used in Oil Industry"
-            u"Kerosene"    : 43.2, # from "Conversion Factors Used in Oil Industry"
-            u"Gas Oil"     : 33.0, # from "Conversion Factors Used in Oil Industry"
-            u"Diesel"      : 31.14, # from "Conversion Factors Used in Oil Industry"
-            u"Lube Oil"    : 25.7, # from "Conversion Factors Used in Oil Industry"
-            u"Bitumen"     : 3.3, # from "Conversion Factors Used in Oil Industry"
-            u"IFO 180"     : 14.7, # from NOAA Adios library
-            u"IFO 300"     : 11.9, # from NOAA Adios library
-            u"Fuel Oil 6"  : 12.3, # from NOAA Adios library
-            u"Fuel Oil 4"  : 25.72, # from Env. Canada, 1996
-            #u"Fuel Oil 2"  : 30.0, # from Env. Canada, 1996
-            u"Unknown": None}
+OilTypes = {
+    u"Crude - Light": 36.0,  # from "Conversion Factors Used in Oil Industry"
+    u"Crude - Medium": 26.7,  # from "Conversion Factors Used in Oil Industry"
+    u"Crude - Heavy": 17.0,  # from "Conversion Factors Used in Oil Industry"
+    u"Gasoline": 57.0,  # from "Conversion Factors Used in Oil Industry"
+    u"Kerosene": 43.2,  # from "Conversion Factors Used in Oil Industry"
+    u"Gas Oil": 33.0,  # from "Conversion Factors Used in Oil Industry"
+    u"Diesel": 31.14,  # from "Conversion Factors Used in Oil Industry"
+    u"Lube Oil": 25.7,  # from "Conversion Factors Used in Oil Industry"
+    u"Bitumen": 3.3,  # from "Conversion Factors Used in Oil Industry"
+    u"IFO 180": 14.7,  # from NOAA Adios library
+    u"IFO 300": 11.9,  # from NOAA Adios library
+    u"Fuel Oil 6": 12.3,  # from NOAA Adios library
+    u"Fuel Oil 4": 25.72,  # from Env. Canada, 1996
+    #u"Fuel Oil 2"  : 30.0, # from Env. Canada, 1996
+    u"Unknown": None
+}
 
 
 class OilQuantityPanel(wx.Panel):
+
     def __init__(self, *args, **kwargs):
         kwargs['style'] = wx.SUNKEN_BORDER
         wx.Panel.__init__(self, *args, **kwargs)
@@ -74,7 +76,6 @@ class OilQuantityPanel(wx.Panel):
         self.VolUnits = wx.Choice(self, choices=VolUnits)
         self.VolUnits.SetStringSelection("barrel (petroleum)")
 
-
         OilTypeSizer.Add(MassLabel, 0)
         OilTypeSizer.Add(self.MassBox, 0, wx.EXPAND)
         OilTypeSizer.Add(self.MassUnits, 0, wx.EXPAND)
@@ -83,32 +84,32 @@ class OilQuantityPanel(wx.Panel):
         OilTypeSizer.Add(self.VolBox, 0, wx.EXPAND)
         OilTypeSizer.Add(self.VolUnits, 0, wx.EXPAND)
 
-
         VertBox = wx.BoxSizer(wx.VERTICAL)
 
         Label = wx.StaticText(self, label="Oil Quantity")
         of = Label.GetFont()
-        Font = wx.Font(int(of.GetPointSize() * 2), of.GetFamily(), wx.NORMAL, wx.NORMAL)
+        Font = wx.Font(int(of.GetPointSize() * 2), of.GetFamily(), wx.NORMAL,
+                       wx.NORMAL)
         Label.SetFont(Font)
 
-
         IconBox = wx.BoxSizer(wx.HORIZONTAL)
-        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NUCOS64.GetBitmap()), 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT,20)
-        IconBox.Add((1,1), 1, wx.EXPAND)
+        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NUCOS64.GetBitmap()), 0,
+                    wx.ALIGN_LEFT | wx.RIGHT | wx.LEFT, 20)
+        IconBox.Add((1, 1), 1, wx.EXPAND)
         IconBox.Add(Label, 0, wx.ALIGN_CENTER)
-        IconBox.Add((1,1), 1, wx.EXPAND)
-        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NOAA64.GetBitmap()), 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.LEFT,20)
-
+        IconBox.Add((1, 1), 1, wx.EXPAND)
+        IconBox.Add(wx.StaticBitmap(self, bitmap=icons.NOAA64.GetBitmap()), 0,
+                    wx.RIGHT | wx.LEFT, 20)
         VertBox.Add((20, 20), 1)
         VertBox.Add(IconBox, 0, wx.EXPAND)
         VertBox.Add((20, 20), 1)
-        VertBox.Add(OilTypeSizer, 0, wx.ALIGN_LEFT|wx.ALL, 10)
+        VertBox.Add(OilTypeSizer, 0, wx.ALIGN_LEFT | wx.ALL, 10)
         VertBox.Add((20, 20), 1)
 
         OuterBox = wx.BoxSizer(wx.HORIZONTAL)
-        OuterBox.Add((5,5), 1)
+        OuterBox.Add((5, 5), 1)
         OuterBox.Add(VertBox, 0)
-        OuterBox.Add((5,5), 1)
+        OuterBox.Add((5, 5), 1)
 
         self.OilType.Bind(wx.EVT_CHOICE, self.OnOilType)
         self.DensityBox.Bind(wx.EVT_TEXT, self.OnDensity)
@@ -120,7 +121,7 @@ class OilQuantityPanel(wx.Panel):
 
         self.SetSizerAndFit(OuterBox)
 
-        self.LastTyped = "Mass" # could be "Mass" or "Volume"
+        self.LastTyped = "Mass"  # could be "Mass" or "Volume"
 
     def OnOilType(self, event):
         self.SetDensity()
@@ -131,7 +132,7 @@ class OilQuantityPanel(wx.Panel):
         self.Calculate()
 
     def OnDensityUnits(self, event):
-        DensityUnits =  self.DensityUnits.GetStringSelection()
+        DensityUnits = self.DensityUnits.GetStringSelection()
         OilType = self.OilType.GetStringSelection()
         if OilType == u"Unknown":
             # don't change the value in the box
@@ -140,7 +141,7 @@ class OilQuantityPanel(wx.Panel):
             # it's a "standard" oil -- re-calculate value
             API = float(OilTypes[OilType])
             Density = UC.convert("Density", "API", DensityUnits, API)
-            self.DensityBox.ChangeValue("%.4g"%Density)
+            self.DensityBox.ChangeValue("%.4g" % Density)
             self.Calculate()
 
     def OnVolume(self, event):
@@ -159,7 +160,7 @@ class OilQuantityPanel(wx.Panel):
             ## this now lets the value stay whatever it was when shifting to "unkown", rather than going blank.
             #self.DensityBox.ChangeValue("")
         else:
-            API = u"%.2f"%API
+            API = u"%.2f" % API
             self.DensityBox.ChangeValue(API)
             self.DensityUnits.SetStringSelection("API degree")
         self.MassBox.SetFocus()
@@ -172,14 +173,12 @@ class OilQuantityPanel(wx.Panel):
                 Density = float(self.DensityBox.GetValue())
                 massString = self.MassBox.GetValue()
                 Mass = float(massString)
-                Volume = UC.OilQuantityConverter.ToVolume(Mass,
-                                                 self.MassUnits.GetStringSelection(),
-                                                 Density,
-                                                 self.DensityUnits.GetStringSelection(),
-                                                 self.VolUnits.GetStringSelection()
-                                                 )
-                format_string = u"%%.%ig"%SignificantFigures(massString)
-                self.VolBox.ChangeValue(format_string%Volume)
+                Volume = UC.OilQuantityConverter.ToVolume(
+                    Mass, self.MassUnits.GetStringSelection(), Density,
+                    self.DensityUnits.GetStringSelection(),
+                    self.VolUnits.GetStringSelection())
+                format_string = u"%%.%ig" % SignificantFigures(massString)
+                self.VolBox.ChangeValue(format_string % Volume)
 
             except ValueError:
                 self.VolBox.ChangeValue("")
@@ -188,16 +187,16 @@ class OilQuantityPanel(wx.Panel):
                 Density = float(self.DensityBox.GetValue())
                 volString = self.VolBox.GetValue()
                 Volume = float(volString)
-                Mass = UC.OilQuantityConverter.ToMass(Volume,
-                                                      self.VolUnits.GetStringSelection(),
-                                                      Density,
-                                                      self.DensityUnits.GetStringSelection(),
-                                                      self.MassUnits.GetStringSelection())
-                format_string = u"%%.%ig"%SignificantFigures(volString)
-                self.MassBox.ChangeValue(format_string%Mass)
+                Mass = UC.OilQuantityConverter.ToMass(
+                    Volume, self.VolUnits.GetStringSelection(), Density,
+                    self.DensityUnits.GetStringSelection(),
+                    self.MassUnits.GetStringSelection())
+                format_string = u"%%.%ig" % SignificantFigures(volString)
+                self.MassBox.ChangeValue(format_string % Mass)
                 #self.MassBox.ChangeValue(u"%.4g"%Mass)
             except ValueError:
                 self.MassBox.ChangeValue("")
+
 
 if __name__ == "__main__":
     a = wx.App(False)
@@ -206,5 +205,3 @@ if __name__ == "__main__":
     f.Fit()
     f.Show()
     a.MainLoop()
-
-
