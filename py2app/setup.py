@@ -7,13 +7,17 @@ Usage:
 
 from setuptools import setup
 
-APP = ['scripts/NUCOS.py']
-DATA_FILES = []
-OPTIONS = {}
+# note: help files should be loaded by the package
+
+APP = ['NUCOS.py']
+Plist = {}
+OPTIONS = {'argv_emulation': False, # this puts the names of dropped files into sys.argv when starting the app.
+           'iconfile': '../Icons/NUCOS.icns',
+           'plist': Plist,
+           }
 
 setup(
     app=APP,
-    data_files=DATA_FILES,
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
 )
