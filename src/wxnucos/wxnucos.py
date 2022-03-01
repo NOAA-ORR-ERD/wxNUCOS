@@ -7,7 +7,7 @@ import webbrowser
 
 import wx
 
-import unit_conversion as UC
+import nucos as UC
 
 # the GUI imports
 from . import __version__
