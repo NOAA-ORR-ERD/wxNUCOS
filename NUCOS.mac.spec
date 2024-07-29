@@ -5,7 +5,8 @@ a = Analysis(
     ['NUCOS.py'],
     pathex=[],
     binaries=[],
-    datas= [ ('src/wxnucos/help/*', 'wxnucos/help') ],
+    datas= [ ('src/wxnucos/help/*', 'wxnucos/help'),
+             ('src/wxnucos/help/Images/*', 'wxnucos/help/Images')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -33,6 +34,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+
 coll = COLLECT(
     exe,
     a.binaries,
