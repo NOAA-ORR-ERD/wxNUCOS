@@ -70,7 +70,7 @@ class AboutDialog(wx.Dialog):
         # Now the rest;
         MainSizer = wx.BoxSizer(wx.VERTICAL)
 
-        MainSizer.Add(Header, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, 5)
+        MainSizer.Add(Header, 0, wx.EXPAND | wx.ALL, 5)
 
         if self.long_name:
             Label = wx.StaticText(self, label=self.long_name)
@@ -87,7 +87,7 @@ class AboutDialog(wx.Dialog):
         if self.description:
             Label = wx.StaticText(self, label=self.description)
 
-            Label.Wrap(max(250, 0.9 * width))
+            Label.Wrap(max(250, int(0.9 * width)))
             MainSizer.Add(Label, 0, wx.ALL | wx.ALIGN_CENTER, 5)
 
         if self.licence:
@@ -97,7 +97,7 @@ class AboutDialog(wx.Dialog):
             Label.SetFont(Font)
             MainSizer.Add(Label, 0, wx.ALL | wx.ALIGN_LEFT, 5)
             Label = wx.StaticText(self, label=self.licence)
-            Label.Wrap(max(250, 0.9 * width))
+            Label.Wrap(max(250, int(0.9 * width)))
             MainSizer.Add(Label, 0, wx.ALL | wx.ALIGN_CENTER, 2)
 
         if self.developers:

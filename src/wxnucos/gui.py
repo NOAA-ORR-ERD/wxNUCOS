@@ -23,7 +23,7 @@ UNIT_TYPES_TO_IGNORE = {
  'Angular Measure',
  'Angular Velocity'}
 
-UNIT_TYPES = sorted(ut for ut in nucos.GetUnitTypes()
+UNIT_TYPES = sorted(ut for ut in nucos.get_unit_types()
                     if ut not in UNIT_TYPES_TO_IGNORE)
 
 
@@ -38,7 +38,7 @@ class ConverterPanel(wx.Panel):
                           style=wx.SUNKEN_BORDER)
 
         self.UnitType = UnitType
-        Units = nucos.GetUnitNames(UnitType)
+        Units = nucos.get_primary_names(UnitType)
         Units.sort(key=str.lower)
 
         self.FromUnits = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition,
@@ -389,6 +389,10 @@ class ConverterFrame(wx.Frame):
         self.HelpFrame = None
 
         self.Fit()
+
+        self.CenterOnScreen()
+
+
 
     def OnHelp(self, event):
 

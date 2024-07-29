@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "wxnucos"
+authors = [
+    {name = "Christopher H Barker", email="Chris.Barker@noaa.gov"},
+]
+description = "Unit conversion GUI utility: designed for Oil Spills"
+readme = "README.rst"
+requires-python = ">=3.12"
+license = {text = "CC-0: Public Domain"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "wxpython",
+    "pynucos",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "wxnucos.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]  # list of folders that contain the packages (["."] by default)
+# include = ["my_package*"]  # package names should match these glob patterns (["*"] by default)
+# exclude = ["my_package.tests*"]  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
