@@ -15,7 +15,7 @@ conda_requirements.txt
 
 PyInstaller is used to build the executable(s)
 
-pip intall ./
+pip install ./
 
 Running:
 ========

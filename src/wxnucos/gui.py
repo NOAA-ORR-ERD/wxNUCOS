@@ -432,7 +432,7 @@ class ConverterFrame(wx.Frame):
                 version=__version__,
                 description=description,
                 urls=[
-                    "http://response.restoration.noaa.gov/NUCOS",
+                    "https://response.restoration.noaa.gov/oil-and-chemical-spills/oil-spills/response-tools/nucos-unit-converter-spill-responders.html",
                     "mailto://orr.nucos@noaa.gov"
                 ],
                 licence=("NUCOS was developed by an agency of the "
