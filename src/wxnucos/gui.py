@@ -429,7 +429,7 @@ class ConverterFrame(wx.Frame):
                 icon2=icons.NOAA64.GetBitmap(),
                 short_name='NUCOS',
                 long_name='NOAA Unit Converter for Oil Spills',
-                version=__version__,
+                version=f"wxnucos: {__version__} -- pynucos: {nucos.__version__}",
                 description=description,
                 urls=[
                     "https://response.restoration.noaa.gov/oil-and-chemical-spills/oil-spills/response-tools/nucos-unit-converter-spill-responders.html",
